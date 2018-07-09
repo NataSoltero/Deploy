@@ -1,8 +1,7 @@
 provider "aws" {
 	region = "${var.region}"
-	assume_role {
-		role_arn     = "arn:aws:iam::098433797604:role/demo"
-	}
+	shared_credentials_file = "/home/vagrant/.aws/credentials"
+	profile = "default"
 }
 
 data "aws_availability_zones" "all" {}
