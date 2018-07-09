@@ -1,4 +1,4 @@
-provider "aws" {
+seprovider "aws" {
 	region = "${var.region}"
 	shared_credentials_file = "/home/vagrant/.aws/credentials"
 	profile = "default"
@@ -83,6 +83,7 @@ resource "aws_launch_configuration" "elasticsearch" {
 	image_id = "ami-28e07e50"
 	instance_type = "t2.micro"
 	security_groups = ["${aws_security_group.elasticsearch.id}"]
+	key_name = "demo"
 	
 	name = "Elasticsearch Server"
 	
@@ -148,6 +149,7 @@ resource "aws_launch_configuration" "logstash" {
 	image_id = "ami-28e07e50"
 	instance_type = "t2.micro"
 	security_groups = ["${aws_security_group.logstash.id}"]
+	key_name = "demo"
 	
 	name = "Logstash Server"
 	
@@ -213,6 +215,7 @@ resource "aws_launch_configuration" "kibana" {
 	image_id = "ami-28e07e50"
 	instance_type = "t2.micro"
 	security_groups = ["${aws_security_group.kibana.id}"]
+	key_name = "demo"
 	
 	name = "Kibana Server"
 	
@@ -278,6 +281,7 @@ resource "aws_launch_configuration" "web" {
 	image_id = "ami-28e07e50"
 	instance_type = "t2.micro"
 	security_groups = ["${aws_security_group.web.id}"]
+	key_name = "demo"
 	
 	name = "Web Server"
 	
