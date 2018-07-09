@@ -1,6 +1,7 @@
 provider "aws" {
 	region = "${var.region}"
 	shared_credentials_file = "/home/vagrant/.aws/credentials"
+	profile = "default"
 }
 
 data "aws_availability_zones" "all" {}
