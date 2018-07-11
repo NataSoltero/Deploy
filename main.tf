@@ -59,16 +59,13 @@ resource "aws_launch_configuration" "elasticsearch" {
 	user_data = <<-EOF
 			#!/bin/bash
 			sudo useradd vagrant -U -s /bin/bash
-			sudo vi /etc/sudoers
-			vagrant ALL=(ALL) NOPASSWD: ALL
-			sudo -su vagrant
-			cd /home/vagrant
-			mkdir /home/vagrant/.ssh
-			chmod 700 /home/vagrant/.ssh
-			touch /home/vagrant/.ssh/authorized_keys
-			echo "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCu9a4YwarFt87Z4Tuf39ElIdo/N7hRCyKSKEUvvsRbmrDtKywFJguTsI0pQ9lQE3lPGUPygr0WI2+yd7JewVm2cfixX9ZAN7odFHeIRlWRMk5tVjT+rJAe89xwnd7ReoFt9sJuzo/mlFRdW3mB/YgQWDFgmMzHJRByZBhhGfDVoNGSSZD4g16kEQ3bnXiNdQcvQvOEIn3t0gCnaXMQNJpRlBJPLB0JrR+Fxcxe3G0/V7+x0jrmQV1X/TBHM400wQWIG1udoSICepvrM7WO3xbTWvcSbbSYJVLhmeaz94VcMrGXSp+iJRpyet3WWYEUjDxeZ+PqbA8seGJ48UHFAelv vagrant@jenkinsdemo" > /home/vagrant/.ssh/authorized_keys
-			cd .ssh
-			chmod 600 authorized_keys
+			sudo mkdir /home/vagrant/.ssh
+			sudo chown vagrant:vagrant /home/vagrant/.ssh
+			sudo chmod 700 /home/vagrant/.ssh
+			sudo touch /home/vagrant/.ssh/authorized_keys
+			sudo chown vagrant:vagrant /home/vagrant/.ssh/authorized_keys
+			sudo chmod 600 /home/vagrant/.ssh/authorized_keys
+			sudo echo "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCu9a4YwarFt87Z4Tuf39ElIdo/N7hRCyKSKEUvvsRbmrDtKywFJguTsI0pQ9lQE3lPGUPygr0WI2+yd7JewVm2cfixX9ZAN7odFHeIRlWRMk5tVjT+rJAe89xwnd7ReoFt9sJuzo/mlFRdW3mB/YgQWDFgmMzHJRByZBhhGfDVoNGSSZD4g16kEQ3bnXiNdQcvQvOEIn3t0gCnaXMQNJpRlBJPLB0JrR+Fxcxe3G0/V7+x0jrmQV1X/TBHM400wQWIG1udoSICepvrM7WO3xbTWvcSbbSYJVLhmeaz94VcMrGXSp+iJRpyet3WWYEUjDxeZ+PqbA8seGJ48UHFAelv vagrant@jenkinsdemo" > /home/vagrant/.ssh/authorized_keys
 			EOF
 	
 	lifecycle {
@@ -125,19 +122,16 @@ resource "aws_launch_configuration" "logstash" {
 	name = "Logstash Server"
 	
 	user_data = <<-EOF
-		#!/bin/bash
-		sudo useradd vagrant -U -s /bin/bash
-		sudo vi /etc/sudoers
-		vagrant ALL=(ALL) NOPASSWD: ALL
-		sudo -su vagrant
-		cd /home/vagrant
-		mkdir /home/vagrant/.ssh
-		chmod 700 /home/vagrant/.ssh
-		touch /home/vagrant/.ssh/authorized_keys
-		echo "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCu9a4YwarFt87Z4Tuf39ElIdo/N7hRCyKSKEUvvsRbmrDtKywFJguTsI0pQ9lQE3lPGUPygr0WI2+yd7JewVm2cfixX9ZAN7odFHeIRlWRMk5tVjT+rJAe89xwnd7ReoFt9sJuzo/mlFRdW3mB/YgQWDFgmMzHJRByZBhhGfDVoNGSSZD4g16kEQ3bnXiNdQcvQvOEIn3t0gCnaXMQNJpRlBJPLB0JrR+Fxcxe3G0/V7+x0jrmQV1X/TBHM400wQWIG1udoSICepvrM7WO3xbTWvcSbbSYJVLhmeaz94VcMrGXSp+iJRpyet3WWYEUjDxeZ+PqbA8seGJ48UHFAelv vagrant@jenkinsdemo" > /home/vagrant/.ssh/authorized_keys
-		cd .ssh
-		chmod 600 authorized_keys
-		EOF
+			#!/bin/bash
+			sudo useradd vagrant -U -s /bin/bash
+			sudo mkdir /home/vagrant/.ssh
+			sudo chown vagrant:vagrant /home/vagrant/.ssh
+			sudo chmod 700 /home/vagrant/.ssh
+			sudo touch /home/vagrant/.ssh/authorized_keys
+			sudo chown vagrant:vagrant /home/vagrant/.ssh/authorized_keys
+			sudo chmod 600 /home/vagrant/.ssh/authorized_keys
+			sudo echo "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCu9a4YwarFt87Z4Tuf39ElIdo/N7hRCyKSKEUvvsRbmrDtKywFJguTsI0pQ9lQE3lPGUPygr0WI2+yd7JewVm2cfixX9ZAN7odFHeIRlWRMk5tVjT+rJAe89xwnd7ReoFt9sJuzo/mlFRdW3mB/YgQWDFgmMzHJRByZBhhGfDVoNGSSZD4g16kEQ3bnXiNdQcvQvOEIn3t0gCnaXMQNJpRlBJPLB0JrR+Fxcxe3G0/V7+x0jrmQV1X/TBHM400wQWIG1udoSICepvrM7WO3xbTWvcSbbSYJVLhmeaz94VcMrGXSp+iJRpyet3WWYEUjDxeZ+PqbA8seGJ48UHFAelv vagrant@jenkinsdemo" > /home/vagrant/.ssh/authorized_keys
+			EOF
 			
 	lifecycle {
 		create_before_destroy = true
@@ -173,19 +167,16 @@ resource "aws_launch_configuration" "kibana" {
 	name = "Kibana Server"
 	
 	user_data = <<-EOF
-		#!/bin/bash
-		sudo useradd vagrant -U -s /bin/bash
-		sudo vi /etc/sudoers
-		vagrant ALL=(ALL) NOPASSWD: ALL
-		sudo -su vagrant
-		cd /home/vagrant
-		mkdir /home/vagrant/.ssh
-		chmod 700 /home/vagrant/.ssh
-		touch /home/vagrant/.ssh/authorized_keys
-		echo "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCu9a4YwarFt87Z4Tuf39ElIdo/N7hRCyKSKEUvvsRbmrDtKywFJguTsI0pQ9lQE3lPGUPygr0WI2+yd7JewVm2cfixX9ZAN7odFHeIRlWRMk5tVjT+rJAe89xwnd7ReoFt9sJuzo/mlFRdW3mB/YgQWDFgmMzHJRByZBhhGfDVoNGSSZD4g16kEQ3bnXiNdQcvQvOEIn3t0gCnaXMQNJpRlBJPLB0JrR+Fxcxe3G0/V7+x0jrmQV1X/TBHM400wQWIG1udoSICepvrM7WO3xbTWvcSbbSYJVLhmeaz94VcMrGXSp+iJRpyet3WWYEUjDxeZ+PqbA8seGJ48UHFAelv vagrant@jenkinsdemo" > /home/vagrant/.ssh/authorized_keys
-		cd .ssh
-		chmod 600 authorized_keys
-		EOF
+			#!/bin/bash
+			sudo useradd vagrant -U -s /bin/bash
+			sudo mkdir /home/vagrant/.ssh
+			sudo chown vagrant:vagrant /home/vagrant/.ssh
+			sudo chmod 700 /home/vagrant/.ssh
+			sudo touch /home/vagrant/.ssh/authorized_keys
+			sudo chown vagrant:vagrant /home/vagrant/.ssh/authorized_keys
+			sudo chmod 600 /home/vagrant/.ssh/authorized_keys
+			sudo echo "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCu9a4YwarFt87Z4Tuf39ElIdo/N7hRCyKSKEUvvsRbmrDtKywFJguTsI0pQ9lQE3lPGUPygr0WI2+yd7JewVm2cfixX9ZAN7odFHeIRlWRMk5tVjT+rJAe89xwnd7ReoFt9sJuzo/mlFRdW3mB/YgQWDFgmMzHJRByZBhhGfDVoNGSSZD4g16kEQ3bnXiNdQcvQvOEIn3t0gCnaXMQNJpRlBJPLB0JrR+Fxcxe3G0/V7+x0jrmQV1X/TBHM400wQWIG1udoSICepvrM7WO3xbTWvcSbbSYJVLhmeaz94VcMrGXSp+iJRpyet3WWYEUjDxeZ+PqbA8seGJ48UHFAelv vagrant@jenkinsdemo" > /home/vagrant/.ssh/authorized_keys
+			EOF
 	
 	lifecycle {
 		create_before_destroy = true
@@ -221,19 +212,16 @@ resource "aws_launch_configuration" "web" {
 	name = "Web Server"
 	
 	user_data = <<-EOF
-		#!/bin/bash
-		sudo useradd vagrant -U -s /bin/bash
-		sudo vi /etc/sudoers
-		vagrant ALL=(ALL) NOPASSWD: ALL
-		sudo -su vagrant
-		cd /home/vagrant
-		mkdir /home/vagrant/.ssh
-		chmod 700 /home/vagrant/.ssh
-		touch /home/vagrant/.ssh/authorized_keys
-		echo "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCu9a4YwarFt87Z4Tuf39ElIdo/N7hRCyKSKEUvvsRbmrDtKywFJguTsI0pQ9lQE3lPGUPygr0WI2+yd7JewVm2cfixX9ZAN7odFHeIRlWRMk5tVjT+rJAe89xwnd7ReoFt9sJuzo/mlFRdW3mB/YgQWDFgmMzHJRByZBhhGfDVoNGSSZD4g16kEQ3bnXiNdQcvQvOEIn3t0gCnaXMQNJpRlBJPLB0JrR+Fxcxe3G0/V7+x0jrmQV1X/TBHM400wQWIG1udoSICepvrM7WO3xbTWvcSbbSYJVLhmeaz94VcMrGXSp+iJRpyet3WWYEUjDxeZ+PqbA8seGJ48UHFAelv vagrant@jenkinsdemo" > /home/vagrant/.ssh/authorized_keys
-		cd .ssh
-		chmod 600 authorized_keys
-		EOF
+			#!/bin/bash
+			sudo useradd vagrant -U -s /bin/bash
+			sudo mkdir /home/vagrant/.ssh
+			sudo chown vagrant:vagrant /home/vagrant/.ssh
+			sudo chmod 700 /home/vagrant/.ssh
+			sudo touch /home/vagrant/.ssh/authorized_keys
+			sudo chown vagrant:vagrant /home/vagrant/.ssh/authorized_keys
+			sudo chmod 600 /home/vagrant/.ssh/authorized_keys
+			sudo echo "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCu9a4YwarFt87Z4Tuf39ElIdo/N7hRCyKSKEUvvsRbmrDtKywFJguTsI0pQ9lQE3lPGUPygr0WI2+yd7JewVm2cfixX9ZAN7odFHeIRlWRMk5tVjT+rJAe89xwnd7ReoFt9sJuzo/mlFRdW3mB/YgQWDFgmMzHJRByZBhhGfDVoNGSSZD4g16kEQ3bnXiNdQcvQvOEIn3t0gCnaXMQNJpRlBJPLB0JrR+Fxcxe3G0/V7+x0jrmQV1X/TBHM400wQWIG1udoSICepvrM7WO3xbTWvcSbbSYJVLhmeaz94VcMrGXSp+iJRpyet3WWYEUjDxeZ+PqbA8seGJ48UHFAelv vagrant@jenkinsdemo" > /home/vagrant/.ssh/authorized_keys
+			EOF
 	
 	lifecycle {
 		create_before_destroy = true
