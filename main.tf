@@ -54,7 +54,7 @@ resource "aws_launch_configuration" "elasticsearch" {
 	security_groups = ["${aws_security_group.allow_all.id}"]
 	key_name = "demo"
 	ebs_block_device { 
-		device_name = "/dev/sdb"
+		device_name = "/dev/sda1"
 		volume_size = 30
 	}
 	
