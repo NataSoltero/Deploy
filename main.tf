@@ -58,6 +58,7 @@ resource "aws_launch_configuration" "elasticsearch" {
 	
 	user_data = <<-EOF
 			#!/bin/bash
+			sudo yum install -y java
 			sudo useradd vagrant -U -s /bin/bash
 			sudo mkdir /home/vagrant/.ssh
 			sudo chown vagrant:vagrant /home/vagrant/.ssh
@@ -67,6 +68,16 @@ resource "aws_launch_configuration" "elasticsearch" {
 			sudo chmod 600 /home/vagrant/.ssh/authorized_keys
 			sudo echo "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCu9a4YwarFt87Z4Tuf39ElIdo/N7hRCyKSKEUvvsRbmrDtKywFJguTsI0pQ9lQE3lPGUPygr0WI2+yd7JewVm2cfixX9ZAN7odFHeIRlWRMk5tVjT+rJAe89xwnd7ReoFt9sJuzo/mlFRdW3mB/YgQWDFgmMzHJRByZBhhGfDVoNGSSZD4g16kEQ3bnXiNdQcvQvOEIn3t0gCnaXMQNJpRlBJPLB0JrR+Fxcxe3G0/V7+x0jrmQV1X/TBHM400wQWIG1udoSICepvrM7WO3xbTWvcSbbSYJVLhmeaz94VcMrGXSp+iJRpyet3WWYEUjDxeZ+PqbA8seGJ48UHFAelv vagrant@jenkinsdemo" > /home/vagrant/.ssh/authorized_keys
 			sudo echo "vagrant ALL=(ALL)	NOPASSWD: ALL"  >> /etc/sudoers
+			sudo rpm --import https://artifacts.elastic.co/GPG-KEY-elasticsearch
+			sudo touch /etc/yum.repos.d/elastic.repo
+			sudo echo "[elasticsearch-6.x]
+			name=Elasticsearch repository for 6.x packages
+			baseurl=https://artifacts.elastic.co/packages/6.x/yum
+			gpgcheck=1
+			gpgkey=https://artifacts.elastic.co/GPG-KEY-elasticsearch
+			enabled=1
+			autorefresh=1
+			type=rpm-md" > /etc/yum.repos.d/elastic.repo
 			EOF
 	
 	lifecycle {
@@ -92,142 +103,4 @@ resource "aws_security_group" "allow_all" {
     protocol        = "-1"
     cidr_blocks     = ["0.0.0.0/0"]
   }
-}
-
-#ASG Logstash
-resource "aws_autoscaling_group" "logstash" {
-	launch_configuration = "${aws_launch_configuration.logstash.id}"
-	load_balancers = ["${aws_elb.demo.id}"]
-	availability_zones = ["us-west-2a", "us-west-2b", "us-west-2c"]
-	
-	desired_capacity = 1
-	min_size = 1
-	max_size = 5
-	health_check_grace_period = 300
-	health_check_type = "ELB"
-	
-	tag{
-		key = "Name"
-		value = "Logstash"
-		propagate_at_launch = true
-	}
-}
-
-#Launch Configuration Logstash
-resource "aws_launch_configuration" "logstash" {
-	image_id = "ami-28e07e50"
-	instance_type = "t2.micro"
-	security_groups = ["${aws_security_group.allow_all.id}"]
-	key_name = "demo"
-	
-	name = "Logstash Server"
-	
-	user_data = <<-EOF
-			#!/bin/bash
-			sudo useradd vagrant -U -s /bin/bash
-			sudo mkdir /home/vagrant/.ssh
-			sudo chown vagrant:vagrant /home/vagrant/.ssh
-			sudo chmod 700 /home/vagrant/.ssh
-			sudo touch /home/vagrant/.ssh/authorized_keys
-			sudo chown vagrant:vagrant /home/vagrant/.ssh/authorized_keys
-			sudo chmod 600 /home/vagrant/.ssh/authorized_keys
-			sudo echo "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCu9a4YwarFt87Z4Tuf39ElIdo/N7hRCyKSKEUvvsRbmrDtKywFJguTsI0pQ9lQE3lPGUPygr0WI2+yd7JewVm2cfixX9ZAN7odFHeIRlWRMk5tVjT+rJAe89xwnd7ReoFt9sJuzo/mlFRdW3mB/YgQWDFgmMzHJRByZBhhGfDVoNGSSZD4g16kEQ3bnXiNdQcvQvOEIn3t0gCnaXMQNJpRlBJPLB0JrR+Fxcxe3G0/V7+x0jrmQV1X/TBHM400wQWIG1udoSICepvrM7WO3xbTWvcSbbSYJVLhmeaz94VcMrGXSp+iJRpyet3WWYEUjDxeZ+PqbA8seGJ48UHFAelv vagrant@jenkinsdemo" > /home/vagrant/.ssh/authorized_keys
-			sudo echo "vagrant ALL=(ALL)	NOPASSWD: ALL"  >> /etc/sudoers
-			EOF
-			
-	lifecycle {
-		create_before_destroy = true
-	}
-}
-
-#ASG Kibana
-resource "aws_autoscaling_group" "kibana" {
-	launch_configuration = "${aws_launch_configuration.kibana.id}"
-	load_balancers = ["${aws_elb.demo.id}"]
-	availability_zones = ["us-west-2a", "us-west-2b", "us-west-2c"]
-	
-	desired_capacity = 1
-	min_size = 1
-	max_size = 5
-	health_check_grace_period = 300
-	health_check_type = "ELB"
-	
-	tag{
-		key = "Name"
-		value = "Kibana"
-		propagate_at_launch = true
-	}
-}
-
-#Launch Configuration Kibana
-resource "aws_launch_configuration" "kibana" {
-	image_id = "ami-28e07e50"
-	instance_type = "t2.micro"
-	security_groups = ["${aws_security_group.allow_all.id}"]
-	key_name = "demo"
-	
-	name = "Kibana Server"
-	
-	user_data = <<-EOF
-			#!/bin/bash
-			sudo useradd vagrant -U -s /bin/bash
-			sudo mkdir /home/vagrant/.ssh
-			sudo chown vagrant:vagrant /home/vagrant/.ssh
-			sudo chmod 700 /home/vagrant/.ssh
-			sudo touch /home/vagrant/.ssh/authorized_keys
-			sudo chown vagrant:vagrant /home/vagrant/.ssh/authorized_keys
-			sudo chmod 600 /home/vagrant/.ssh/authorized_keys
-			sudo echo "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCu9a4YwarFt87Z4Tuf39ElIdo/N7hRCyKSKEUvvsRbmrDtKywFJguTsI0pQ9lQE3lPGUPygr0WI2+yd7JewVm2cfixX9ZAN7odFHeIRlWRMk5tVjT+rJAe89xwnd7ReoFt9sJuzo/mlFRdW3mB/YgQWDFgmMzHJRByZBhhGfDVoNGSSZD4g16kEQ3bnXiNdQcvQvOEIn3t0gCnaXMQNJpRlBJPLB0JrR+Fxcxe3G0/V7+x0jrmQV1X/TBHM400wQWIG1udoSICepvrM7WO3xbTWvcSbbSYJVLhmeaz94VcMrGXSp+iJRpyet3WWYEUjDxeZ+PqbA8seGJ48UHFAelv vagrant@jenkinsdemo" > /home/vagrant/.ssh/authorized_keys
-			sudo echo "vagrant ALL=(ALL)	NOPASSWD: ALL"  >> /etc/sudoers
-			EOF
-	
-	lifecycle {
-		create_before_destroy = true
-	}
-}
-
-#ASG Web
-resource "aws_autoscaling_group" "web" {
-	launch_configuration = "${aws_launch_configuration.web.id}"
-	load_balancers = ["${aws_elb.demo.id}"]
-	availability_zones = ["us-west-2a", "us-west-2b", "us-west-2c"]
-	
-	desired_capacity = 1
-	min_size = 1
-	max_size = 5
-	health_check_grace_period = 300
-	health_check_type = "ELB"
-	
-	tag{
-		key = "Name"
-		value = "Web"
-		propagate_at_launch = true
-	}
-}
-
-#Launch Configuration Web
-resource "aws_launch_configuration" "web" {
-	image_id = "ami-28e07e50"
-	instance_type = "t2.micro"
-	security_groups = ["${aws_security_group.allow_all.id}"]
-	key_name = "demo"
-		
-	name = "Web Server"
-	
-	user_data = <<-EOF
-			#!/bin/bash
-			sudo useradd vagrant -U -s /bin/bash
-			sudo mkdir /home/vagrant/.ssh
-			sudo chown vagrant:vagrant /home/vagrant/.ssh
-			sudo chmod 700 /home/vagrant/.ssh
-			sudo touch /home/vagrant/.ssh/authorized_keys
-			sudo chown vagrant:vagrant /home/vagrant/.ssh/authorized_keys
-			sudo chmod 600 /home/vagrant/.ssh/authorized_keys
-			sudo echo "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCu9a4YwarFt87Z4Tuf39ElIdo/N7hRCyKSKEUvvsRbmrDtKywFJguTsI0pQ9lQE3lPGUPygr0WI2+yd7JewVm2cfixX9ZAN7odFHeIRlWRMk5tVjT+rJAe89xwnd7ReoFt9sJuzo/mlFRdW3mB/YgQWDFgmMzHJRByZBhhGfDVoNGSSZD4g16kEQ3bnXiNdQcvQvOEIn3t0gCnaXMQNJpRlBJPLB0JrR+Fxcxe3G0/V7+x0jrmQV1X/TBHM400wQWIG1udoSICepvrM7WO3xbTWvcSbbSYJVLhmeaz94VcMrGXSp+iJRpyet3WWYEUjDxeZ+PqbA8seGJ48UHFAelv vagrant@jenkinsdemo" > /home/vagrant/.ssh/authorized_keys
-			sudo echo "vagrant ALL=(ALL)	NOPASSWD: ALL"  >> /etc/sudoers
-			EOF
-	
-	lifecycle {
-		create_before_destroy = true
-	}
 }
