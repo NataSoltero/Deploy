@@ -53,6 +53,10 @@ resource "aws_launch_configuration" "elasticsearch" {
 	instance_type = "t2.micro"
 	security_groups = ["${aws_security_group.allow_all.id}"]
 	key_name = "demo"
+	ebs_block_device { 
+		device_name = "/dev/sdb"
+		volume_size = 30
+	}
 	
 	name = "Elasticsearch Server"
 	
