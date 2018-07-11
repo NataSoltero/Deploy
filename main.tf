@@ -66,6 +66,7 @@ resource "aws_launch_configuration" "elasticsearch" {
 			sudo chown vagrant:vagrant /home/vagrant/.ssh/authorized_keys
 			sudo chmod 600 /home/vagrant/.ssh/authorized_keys
 			sudo echo "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCu9a4YwarFt87Z4Tuf39ElIdo/N7hRCyKSKEUvvsRbmrDtKywFJguTsI0pQ9lQE3lPGUPygr0WI2+yd7JewVm2cfixX9ZAN7odFHeIRlWRMk5tVjT+rJAe89xwnd7ReoFt9sJuzo/mlFRdW3mB/YgQWDFgmMzHJRByZBhhGfDVoNGSSZD4g16kEQ3bnXiNdQcvQvOEIn3t0gCnaXMQNJpRlBJPLB0JrR+Fxcxe3G0/V7+x0jrmQV1X/TBHM400wQWIG1udoSICepvrM7WO3xbTWvcSbbSYJVLhmeaz94VcMrGXSp+iJRpyet3WWYEUjDxeZ+PqbA8seGJ48UHFAelv vagrant@jenkinsdemo" > /home/vagrant/.ssh/authorized_keys
+			sudo echo "vagrant ALL=(ALL)	NOPASSWD: ALL"  >> /etc/sudoers
 			EOF
 	
 	lifecycle {
@@ -131,6 +132,7 @@ resource "aws_launch_configuration" "logstash" {
 			sudo chown vagrant:vagrant /home/vagrant/.ssh/authorized_keys
 			sudo chmod 600 /home/vagrant/.ssh/authorized_keys
 			sudo echo "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCu9a4YwarFt87Z4Tuf39ElIdo/N7hRCyKSKEUvvsRbmrDtKywFJguTsI0pQ9lQE3lPGUPygr0WI2+yd7JewVm2cfixX9ZAN7odFHeIRlWRMk5tVjT+rJAe89xwnd7ReoFt9sJuzo/mlFRdW3mB/YgQWDFgmMzHJRByZBhhGfDVoNGSSZD4g16kEQ3bnXiNdQcvQvOEIn3t0gCnaXMQNJpRlBJPLB0JrR+Fxcxe3G0/V7+x0jrmQV1X/TBHM400wQWIG1udoSICepvrM7WO3xbTWvcSbbSYJVLhmeaz94VcMrGXSp+iJRpyet3WWYEUjDxeZ+PqbA8seGJ48UHFAelv vagrant@jenkinsdemo" > /home/vagrant/.ssh/authorized_keys
+			sudo echo "vagrant ALL=(ALL)	NOPASSWD: ALL"  >> /etc/sudoers
 			EOF
 			
 	lifecycle {
@@ -176,6 +178,7 @@ resource "aws_launch_configuration" "kibana" {
 			sudo chown vagrant:vagrant /home/vagrant/.ssh/authorized_keys
 			sudo chmod 600 /home/vagrant/.ssh/authorized_keys
 			sudo echo "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCu9a4YwarFt87Z4Tuf39ElIdo/N7hRCyKSKEUvvsRbmrDtKywFJguTsI0pQ9lQE3lPGUPygr0WI2+yd7JewVm2cfixX9ZAN7odFHeIRlWRMk5tVjT+rJAe89xwnd7ReoFt9sJuzo/mlFRdW3mB/YgQWDFgmMzHJRByZBhhGfDVoNGSSZD4g16kEQ3bnXiNdQcvQvOEIn3t0gCnaXMQNJpRlBJPLB0JrR+Fxcxe3G0/V7+x0jrmQV1X/TBHM400wQWIG1udoSICepvrM7WO3xbTWvcSbbSYJVLhmeaz94VcMrGXSp+iJRpyet3WWYEUjDxeZ+PqbA8seGJ48UHFAelv vagrant@jenkinsdemo" > /home/vagrant/.ssh/authorized_keys
+			sudo echo "vagrant ALL=(ALL)	NOPASSWD: ALL"  >> /etc/sudoers
 			EOF
 	
 	lifecycle {
@@ -221,6 +224,7 @@ resource "aws_launch_configuration" "web" {
 			sudo chown vagrant:vagrant /home/vagrant/.ssh/authorized_keys
 			sudo chmod 600 /home/vagrant/.ssh/authorized_keys
 			sudo echo "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCu9a4YwarFt87Z4Tuf39ElIdo/N7hRCyKSKEUvvsRbmrDtKywFJguTsI0pQ9lQE3lPGUPygr0WI2+yd7JewVm2cfixX9ZAN7odFHeIRlWRMk5tVjT+rJAe89xwnd7ReoFt9sJuzo/mlFRdW3mB/YgQWDFgmMzHJRByZBhhGfDVoNGSSZD4g16kEQ3bnXiNdQcvQvOEIn3t0gCnaXMQNJpRlBJPLB0JrR+Fxcxe3G0/V7+x0jrmQV1X/TBHM400wQWIG1udoSICepvrM7WO3xbTWvcSbbSYJVLhmeaz94VcMrGXSp+iJRpyet3WWYEUjDxeZ+PqbA8seGJ48UHFAelv vagrant@jenkinsdemo" > /home/vagrant/.ssh/authorized_keys
+			sudo echo "vagrant ALL=(ALL)	NOPASSWD: ALL"  >> /etc/sudoers
 			EOF
 	
 	lifecycle {
