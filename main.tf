@@ -42,7 +42,7 @@ resource "aws_autoscaling_group" "elasticsearch" {
 
         tag{
                 key = "Name"
-                value = "Elasticsearch"
+                value = "ELK"
                 propagate_at_launch = true
         }
 }
