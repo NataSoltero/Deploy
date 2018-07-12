@@ -23,7 +23,7 @@ resource "aws_elb" "demo" {
         listener {
                 lb_port = 80
                 lb_protocol = "http"
-        instance_port = "80"
+                instance_port = "80"
                 instance_protocol = "http"
         }
 }
