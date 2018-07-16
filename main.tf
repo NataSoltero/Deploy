@@ -76,7 +76,7 @@ resource "aws_launch_configuration" "elasticsearch" {
                         sudo update-alternatives --install /usr/bin/python python /usr/bin/python2.7 10
                         sudo apt-get clean
 			sudo update-alternatives --config python
-			<enter>
+			
                         EOF
 
         lifecycle {
