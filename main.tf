@@ -71,7 +71,7 @@ resource "aws_launch_configuration" "elasticsearch" {
                         sudo echo "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCu9a4YwarFt87Z4Tuf39ElIdo/N7hRCyKSKEUvvsRbmrDtKywFJguTsI0pQ9lQE3lPGUPygr0WI2+yd7JewVm2cfixX9ZAN7odFHeIRlWRMk5tVjT+rJAe89xwnd7ReoFt9sJuzo/mlFRdW3mB/YgQWDFgmMzHJRByZBhhGfDVoNGSSZD4g16kEQ3bnXiNdQcvQvOEIn3t0gCnaXMQNJpRlBJPLB0JrR+Fxcxe3G0/V7+x0jrmQV1X/TBHM400wQWIG1udoSICepvrM7WO3xbTWvcSbbSYJVLhmeaz94VcMrGXSp+iJRpyet3WWYEUjDxeZ+PqbA8seGJ48UHFAelv vagrant@jenkinsdemo" > /home/vagrant/.ssh/authorized_keys
                         sudo echo "vagrant ALL=(ALL)    NOPASSWD: ALL"  >> /etc/sudoers
                         sudo apt-get update
-                        sudo apt-get install python-gdbm
+                        sudo apt-get -y install python-gdbm
                         sudo update-alternatives --install /usr/bin/python python /usr/bin/python3.5 1
                         sudo update-alternatives --install /usr/bin/python python /usr/bin/python2.7 10
                         sudo apt-get clean
