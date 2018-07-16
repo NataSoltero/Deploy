@@ -1,92 +1,94 @@
 provider "aws" {
-	region = "${var.region}"
-	shared_credentials_file = "/home/vagrant/.aws/credentials"
-	profile = "default"
+        region = "${var.region}"
+        shared_credentials_file = "/home/vagrant/.aws/credentials"
+        profile = "default"
 }
 
 data "aws_availability_zones" "all" {}
 
 #ELB
 resource "aws_elb" "demo" {
-	name = "terraform-asg-demo"
-	cross_zone_load_balancing = true
-	availability_zones = ["us-west-2a", "us-west-2b", "us-west-2c"]
-	
-	health_check {
-		healthy_threshold = 2
-		unhealthy_threshold = 3
-		timeout = 3
-		interval = 30
-		target = "tcp:22"
-	}
+        name = "terraform-asg-demo"
+        cross_zone_load_balancing = true
+        availability_zones = ["us-west-2a", "us-west-2b", "us-west-2c"]
 
-	listener {
-		lb_port = 80
-		lb_protocol = "http"
+        health_check {
+                healthy_threshold = 2
+                unhealthy_threshold = 3
+                timeout = 3
+                interval = 30
+                target = "tcp:22"
+        }
+
+        listener {
+                lb_port = 80
+                lb_protocol = "http"
         instance_port = "80"
-		instance_protocol = "http"
-	}
+                instance_protocol = "http"
+        }
 }
 
 #ASG Elasticsearch
 resource "aws_autoscaling_group" "elasticsearch" {
-	launch_configuration = "${aws_launch_configuration.elasticsearch.id}"
-	load_balancers = ["${aws_elb.demo.id}"]
-	availability_zones = ["us-west-2a", "us-west-2b", "us-west-2c"]
-	
-	desired_capacity = 1
-	min_size = 1
-	max_size = 5
-	health_check_grace_period = 300
-	health_check_type = "ELB"
-	
-	tag{
-		key = "Name"
-		value = "ELK"
-		propagate_at_launch = true
-	}
+        launch_configuration = "${aws_launch_configuration.elasticsearch.id}"
+        load_balancers = ["${aws_elb.demo.id}"]
+        availability_zones = ["us-west-2a", "us-west-2b", "us-west-2c"]
+
+        desired_capacity = 1
+        min_size = 1
+        max_size = 5
+        health_check_grace_period = 300
+        health_check_type = "ELB"
+
+        tag{
+                key = "Name"
+                value = "ELK"
+                propagate_at_launch = true
+        }
 }
 
 #Launch Configuration
 resource "aws_launch_configuration" "elasticsearch" {
-	image_id = "ami-ba602bc2"
-	instance_type = "t2.small"
-	security_groups = ["${aws_security_group.allow_all.id}"]
-	key_name = "demo"
-	root_block_device { 
-		volume_size = 30
-	}
-	
-	name = "Elasticsearch Server"
-	
-	user_data = <<-EOF
-			#!/bin/bash
-			sudo adduser vagrant --home /home/vagrant --shell /bin/bash
-			sudo mkdir /home/vagrant/.ssh
-			sudo chown vagrant:vagrant /home/vagrant/.ssh
-			sudo chmod 700 /home/vagrant/.ssh
-			sudo touch /home/vagrant/.ssh/authorized_keys
-			sudo chown vagrant:vagrant /home/vagrant/.ssh/authorized_keys
-			sudo chmod 600 /home/vagrant/.ssh/authorized_keys
-			sudo echo "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCu9a4YwarFt87Z4Tuf39ElIdo/N7hRCyKSKEUvvsRbmrDtKywFJguTsI0pQ9lQE3lPGUPygr0WI2+yd7JewVm2cfixX9ZAN7odFHeIRlWRMk5tVjT+rJAe89xwnd7ReoFt9sJuzo/mlFRdW3mB/YgQWDFgmMzHJRByZBhhGfDVoNGSSZD4g16kEQ3bnXiNdQcvQvOEIn3t0gCnaXMQNJpRlBJPLB0JrR+Fxcxe3G0/V7+x0jrmQV1X/TBHM400wQWIG1udoSICepvrM7WO3xbTWvcSbbSYJVLhmeaz94VcMrGXSp+iJRpyet3WWYEUjDxeZ+PqbA8seGJ48UHFAelv vagrant@jenkinsdemo" > /home/vagrant/.ssh/authorized_keys
-			sudo echo "vagrant ALL=(ALL)	NOPASSWD: ALL"  >> /etc/sudoers
-			sudo apt-get update
-			sudo apt-get install -y python-gdbm
-			sudo update-alternatives --install /usr/bin/python python /usr/bin/python3.5 1
-			sudo update-alternatives --install /usr/bin/python python /usr/bin/python2.7 10
-			sudo apt-get clean
-			EOF
-	
-	lifecycle {
-		create_before_destroy = true
-	}
+        image_id = "ami-ba602bc2"
+        instance_type = "t2.medium"
+        security_groups = ["${aws_security_group.allow_all.id}"]
+        key_name = "demo"
+        root_block_device {
+                volume_size = 30
+        }
+
+        name = "Elasticsearch Server"
+
+        user_data = <<-EOF
+                        #!/bin/bash
+                        sudo adduser vagrant --home /home/vagrant --shell /bin/bash
+                        sudo mkdir /home/vagrant/.ssh
+                        sudo chown vagrant:vagrant /home/vagrant/.ssh
+                        sudo chmod 700 /home/vagrant/.ssh
+                        sudo touch /home/vagrant/.ssh/authorized_keys
+                        sudo chown vagrant:vagrant /home/vagrant/.ssh/authorized_keys
+                        sudo chmod 600 /home/vagrant/.ssh/authorized_keys
+                        sudo echo "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCu9a4YwarFt87Z4Tuf39ElIdo/N7hRCyKSKEUvvsRbmrDtKywFJguTsI0pQ9lQE3lPGUPygr0WI2+yd7JewVm2cfixX9ZAN7odFHeIRlWRMk5tVjT+rJAe89xwnd7ReoFt9sJuzo/mlFRdW3mB/YgQWDFgmMzHJRByZBhhGfDVoNGSSZD4g16kEQ3bnXiNdQcvQvOEIn3t0gCnaXMQNJpRlBJPLB0JrR+Fxcxe3G0/V7+x0jrmQV1X/TBHM400wQWIG1udoSICepvrM7WO3xbTWvcSbbSYJVLhmeaz94VcMrGXSp+iJRpyet3WWYEUjDxeZ+PqbA8seGJ48UHFAelv vagrant@jenkinsdemo" > /home/vagrant/.ssh/authorized_keys
+                        sudo echo "vagrant ALL=(ALL)    NOPASSWD: ALL"  >> /etc/sudoers
+                        sudo apt-get update
+                        sudo apt-get install python-gdbm
+                        sudo update-alternatives --install /usr/bin/python python /usr/bin/python3.5 1
+                        sudo update-alternatives --install /usr/bin/python python /usr/bin/python2.7 10
+                        sudo apt-get clean
+			sudo update-alternatives --config python
+			<enter>
+                        EOF
+
+        lifecycle {
+                create_before_destroy = true
+        }
 }
 
 #SG
 resource "aws_security_group" "allow_all" {
   name = "allow_all"
   description = "Allow all inbound traffic"
-  
+
   ingress {
     from_port   = 0
     to_port     = 0
