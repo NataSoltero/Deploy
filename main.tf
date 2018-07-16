@@ -53,10 +53,7 @@ resource "aws_launch_configuration" "elasticsearch" {
         instance_type = "t2.medium"
         security_groups = ["${aws_security_group.allow_all.id}"]
         key_name = "demo"
-        root_block_device {
-                volume_size = 30
-        }
-
+        
         name = "Elasticsearch Server"
 
         user_data = <<-EOF
