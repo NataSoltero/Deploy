@@ -102,7 +102,7 @@ resource "aws_autoscaling_group" "elasticsearch" {
 #Launch Configuration
 resource "aws_launch_configuration" "elasticsearch" {
         image_id = "ami-ba602bc2"
-        instance_type = "t2.micro"
+        instance_type = "t2.medium"
         security_groups = ["${aws_security_group.allow_all.id}"]
         key_name = "demo"
         root_block_device {
