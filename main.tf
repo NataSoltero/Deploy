@@ -129,7 +129,7 @@ resource "aws_launch_configuration" "elasticsearch" {
 				sudo apt-get clean
 				sudo update-alternatives --config python
 				#sudo add-apt-repository ppa:webupd8team/java -y
-				#sudo apt-get update
+				sudo apt-get update
 				#echo "oracle-java8-installer shared/accepted-oracle-license-v1-1 select true" | debconf-set-selections
 				#echo "oracle-java8-installer shared/accepted-oracle-license-v1-1 seen true" | debconf-set-selections
 				#sudo apt-get -y install oracle-java8-installer
